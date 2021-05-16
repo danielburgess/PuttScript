@@ -280,7 +280,7 @@ namespace PuttScript
         private static int Encode(string tablefile, string inputfile, string outputfile)
         {
             var cache_dict = LoadCache();
-
+            var change_lines = 0;
             //Input File = Text
             List<Tuple<string, string>> dict;
             int DictError = GetDict(tablefile, 1, out dict);
@@ -396,6 +396,7 @@ namespace PuttScript
                     if (this_bytes.Count > 0)
                     {
                         cache_dict.Add(crcVal, this_bytes.ToArray());
+                        change_lines++;
                     }
                 }
                 else
@@ -410,7 +411,8 @@ namespace PuttScript
             bin_f.Close();
 
             SaveCache(cache_dict);
-
+            if (change_lines > 0)
+                Console.WriteLine($"Found {change_lines} changed lines.");
             Console.WriteLine("Written as " + outputfile);
 
             return 0;
